@@ -1,2 +1,47 @@
 # add vivado files
 
+# --- Vivado 2018.3: artefactos de sesion ---
+*.jou
+*.log
+*.str
+*.debug
+*.tmp
+*.dmp
+webtalk*.xml
+webtalk*.jou
+webtalk*.log
+usage_statistics*
+
+# --- Directorios que Vivado regenera ---
+.Xil/
+*.cache/
+*.runs/
+*.sim/
+*.hw/
+*.ip_user_files/
+*.gen/
+*.sdk/
+*.vitis/
+
+# --- Checkpoints, reportes y netlists generados ---
+*.dcp
+*.pb
+*.wdf
+*.rpt
+*.html
+*_stub.v
+*_stub.vhd
+*_stub.vhdl
+*_sim_netlist.v
+*_sim_netlist.vhd
+*_sim_netlist.vhdl
+
+# --- Backups del proyecto ---
+*.xpr.bak
+*.backup.jou
+*.backup.log
+
+# --- Simulacion (si usas xsim / ISIM) ---
+xsim.dir/
+*.wdb
+*.wcfg.bak
