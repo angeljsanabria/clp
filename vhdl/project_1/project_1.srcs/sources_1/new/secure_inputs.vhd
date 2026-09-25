@@ -62,6 +62,9 @@ architecture Behavioral of secure_inputs is
     signal duty_subir_mh    : STD_LOGIC := '0';
     signal duty_bajar_mh    : STD_LOGIC := '0';
     signal duty_reset_mh    : STD_LOGIC := '0';
+    signal duty_subir_mh_2  : STD_LOGIC := '0';
+    signal duty_bajar_mh_2  : STD_LOGIC := '0';
+    signal duty_reset_mh_2  : STD_LOGIC := '0';
     -- contador para rebote en funcion de los 10 MHz de clock -> 30 ms es 300000 ticks de clock
     signal rebote       : unsigned(18 downto 0) := to_unsigned(0, 19);  -- Conversion function/type casting
     constant set_rebote : unsigned(18 downto 0) := to_unsigned(300000, 19);
@@ -84,13 +87,13 @@ begin
         if rising_edge(clk) then
             -- etapas de meta harden para sincronismo
             duty_subir_mh <= btn_duty_subir;
-            duty_subir <= duty_subir_mh;
+            duty_subir_mh_2 <= duty_subir_mh;
             
             duty_bajar_mh <= btn_duty_bajar;
-            duty_bajar <= duty_bajar_mh;
+            duty_bajar_mh_2 <= duty_bajar_mh;
             
             duty_reset_mh <= btn_duty_reset;
-            duty_reset <= duty_reset_mh;
+            duty_reset_mh_2 <= duty_reset_mh;
             
             sel_frec_mh <= sw_sel_frec;
             sel_frec <= sel_frec_mh;
@@ -100,33 +103,33 @@ begin
             
             duty_pwm <= duty;
             -- Si presiono subir; arranco el anti rebote y espero a que termine para bajar la signal
-            if btn_duty_subir = '1' and rebote = 0 then
+            if duty_subir_mh_2 = '1' and rebote = 0 then
                  if duty < 100 then
                     duty <= duty + paso_duty;
                   end if;
                 duty_subir <= '1';
                 rebote <= set_rebote;
-            elsif btn_duty_subir = '0' and rebote = 0 then
+            elsif duty_subir_mh_2 = '0' and rebote = 0 then
                 duty_subir <= '0';
             end if;
             
             -- Si presiono bajar; arranco el anti rebote y espero a que termine para bajar la signal
-            if btn_duty_bajar = '1' and rebote = 0 then
+            if duty_bajar_mh_2 = '1' and rebote = 0 then
                  if duty > 0 then
                     duty <= duty - paso_duty;
                  end if;
                 duty_bajar <= '1';
                 rebote <= set_rebote;
-            elsif btn_duty_bajar = '0' and rebote = 0 then
+            elsif duty_bajar_mh_2 = '0' and rebote = 0 then
                 duty_bajar <= '0';
             end if;  
             
             -- Si presiono resetjar; arranco el anti rebote y espero a que termine para bajar la signal
-            if btn_duty_reset = '1' and rebote = 0 then
-                duty <= to_unsigned(50, 19);
+            if duty_reset_mh_2 = '1' and rebote = 0 then
+                duty <= to_unsigned(50, 8);
                 duty_reset <= '1';
                 rebote <= set_rebote;
-            elsif btn_duty_reset = '0' and rebote = 0 then
+            elsif duty_reset_mh_2 = '0' and rebote = 0 then
                 duty_reset <= '0';
             end if;  
             
