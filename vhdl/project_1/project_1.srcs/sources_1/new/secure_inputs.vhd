@@ -41,6 +41,9 @@ entity secure_inputs is
             sw_sel_frec     : in STD_LOGIC_VECTOR (1 downto 0);
             -- Salidas fisicas
             leds_rgb        : out STD_LOGIC_VECTOR (2 downto 0);
+            led_subir      : out STD_LOGIC := '0';
+            led_bajar      : out STD_LOGIC := '0';
+            led_reset      : out STD_LOGIC := '0';
             -- Salidas logicas
             sel_frec        : out STD_LOGIC_VECTOR (1 downto 0);
             duty_subir      : out STD_LOGIC := '0';
@@ -56,7 +59,11 @@ architecture Behavioral of secure_inputs is
     constant color_verde    : STD_LOGIC_VECTOR (2 downto 0) := "010";
     constant color_amarillo : STD_LOGIC_VECTOR (2 downto 0) := "110";
     constant color_rojo     : STD_LOGIC_VECTOR (2 downto 0) := "100";
+    -- Signals para leds
     signal sel_color        : STD_LOGIC_VECTOR (1 downto 0) := "00";
+    signal led_subir_s      : STD_LOGIC := '0';
+    signal led_bajar_s      : STD_LOGIC := '0';
+    signal led_reset_s      : STD_LOGIC := '0';
     -- Signals para aplicar meta harden
     signal sel_frec_mh      : STD_LOGIC_VECTOR (1 downto 0);
     signal duty_subir_mh    : STD_LOGIC := '0';
@@ -80,7 +87,11 @@ begin
                 color_amarillo  when (sel_color ="10") else
                 color_verde     when (sel_color ="01") else
                 color_azul;    
-    -- Fin Leds RGB
+    -- leds botones
+    led_subir <= led_subir_s;
+    led_bajar <= led_bajar_s;
+    led_reset <= led_reset_s;
+    -- Fin Leds RGB y leds botones
     
     process(clk)    -- process con el clock de 10 MHz
     begin
@@ -108,9 +119,11 @@ begin
                     duty <= duty + paso_duty;
                   end if;
                 duty_subir <= '1';
+                led_subir_s <= '1';    
                 rebote <= set_rebote;
             elsif duty_subir_mh_2 = '0' and rebote = 0 then
                 duty_subir <= '0';
+                led_subir_s <= '0';
             end if;
             
             -- Si presiono bajar; arranco el anti rebote y espero a que termine para bajar la signal
@@ -119,18 +132,22 @@ begin
                     duty <= duty - paso_duty;
                  end if;
                 duty_bajar <= '1';
+                led_bajar_s <= '1';
                 rebote <= set_rebote;
             elsif duty_bajar_mh_2 = '0' and rebote = 0 then
                 duty_bajar <= '0';
+                led_bajar_s <= '0';
             end if;  
             
             -- Si presiono resetjar; arranco el anti rebote y espero a que termine para bajar la signal
             if duty_reset_mh_2 = '1' and rebote = 0 then
                 duty <= to_unsigned(50, 8);
                 duty_reset <= '1';
+                led_reset_s <= '1';
                 rebote <= set_rebote;
             elsif duty_reset_mh_2 = '0' and rebote = 0 then
                 duty_reset <= '0';
+                led_reset_s <= '0';
             end if;  
             
             -- Control del tiempo de rebote
