@@ -49,7 +49,7 @@ entity secure_inputs is
             duty_subir      : out STD_LOGIC := '0';
             duty_bajar      : out STD_LOGIC := '0';
             duty_reset      : out STD_LOGIC := '0';
-            duty_pwm        : out unsigned(7 downto 0)
+            duty_pwm        : out unsigned(6 downto 0)
     );
 end secure_inputs;
 
@@ -76,8 +76,8 @@ architecture Behavioral of secure_inputs is
     signal rebote       : unsigned(18 downto 0) := to_unsigned(0, 19);  -- Conversion function/type casting
     constant set_rebote : unsigned(18 downto 0) := to_unsigned(300000, 19);
     -- control de duty
-    constant paso_duty  : unsigned(7 downto 0) := to_unsigned(10, 8);
-    signal duty         : unsigned(7 downto 0) := to_unsigned(50, 8);
+    constant paso_duty  : unsigned(6 downto 0) := to_unsigned(10, 7);
+    signal duty         : unsigned(6 downto 0) := to_unsigned(50, 7);
     
    
 begin
