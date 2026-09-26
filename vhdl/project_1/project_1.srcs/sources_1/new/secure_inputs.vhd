@@ -49,7 +49,7 @@ entity secure_inputs is
             duty_subir      : out STD_LOGIC := '0';
             duty_bajar      : out STD_LOGIC := '0';
             duty_reset      : out STD_LOGIC := '0';
-            duty_pwm        : out unsigned(6 downto 0)
+            duty_pwm        : out unsigned(3 downto 0)
     );
 end secure_inputs;
 
@@ -76,8 +76,8 @@ architecture Behavioral of secure_inputs is
     signal rebote       : unsigned(18 downto 0) := to_unsigned(0, 19);  -- Conversion function/type casting
     constant set_rebote : unsigned(18 downto 0) := to_unsigned(300000, 19);
     -- control de duty
-    constant paso_duty  : unsigned(6 downto 0) := to_unsigned(10, 7);
-    signal duty         : unsigned(6 downto 0) := to_unsigned(50, 7);
+    constant paso_duty  : unsigned(3 downto 0) := to_unsigned(1, 4);
+    signal duty         : unsigned(3 downto 0) := to_unsigned(5, 4);
     
    
 begin
@@ -115,7 +115,7 @@ begin
             duty_pwm <= duty;
             -- Si presiono subir; arranco el anti rebote y espero a que termine para bajar la signal
             if duty_subir_mh_2 = '1' and rebote = 0 then
-                 if duty < 100 then
+                 if duty < 10 then
                     duty <= duty + paso_duty;
                   end if;
                 duty_subir <= '1';
@@ -141,7 +141,7 @@ begin
             
             -- Si presiono resetjar; arranco el anti rebote y espero a que termine para bajar la signal
             if duty_reset_mh_2 = '1' and rebote = 0 then
-                duty <= to_unsigned(50, 8);
+                duty <= to_unsigned(5, 4);
                 duty_reset <= '1';
                 led_reset_s <= '1';
                 rebote <= set_rebote;

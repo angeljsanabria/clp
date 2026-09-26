@@ -35,7 +35,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity control_pwm is
     Port ( clk : in STD_LOGIC;
            reset : in STD_LOGIC;
-           duty : in unsigned (6 downto 0);
+           duty : in unsigned (3 downto 0);
            --duty_subir : in STD_LOGIC;
            --duty_bajar : in STD_LOGIC;
            sel_frec : in STD_LOGIC_VECTOR (1 downto 0);
@@ -47,7 +47,7 @@ end control_pwm;
 architecture Behavioral of control_pwm is
     signal count_periodo            : unsigned(18 downto 0);
     signal count_paso               : unsigned(18 downto 0);
-    -- El count de on, al multiplicar dos vectores; tengo que hacerlo el doble de bits que la suma de los tamaÒo    
+    -- El count de on, al multiplicar dos vectores; tengo que hacerlo el doble de bits que la suma de los tamaùo    
     signal count_mult_on            : unsigned(37 downto 0)     := to_unsigned(0, 38);
     signal count_on                 : unsigned(18 downto 0)     := to_unsigned(0, 19);
     signal contador_aux             : unsigned(18 downto 0)     := to_unsigned(0, 19);
@@ -83,7 +83,7 @@ begin
             
     end process;
     
-    process(duty)   -- process para control de duty on
+    process(duty, count_paso)   -- process para control de duty on
     begin
         count_mult_on <= count_paso * duty;           
         count_on <=  count_mult_on(18 downto 0);
