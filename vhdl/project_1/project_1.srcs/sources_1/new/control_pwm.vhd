@@ -47,7 +47,7 @@ end control_pwm;
 architecture Behavioral of control_pwm is
     signal count_periodo            : unsigned(18 downto 0);
     signal count_paso               : unsigned(18 downto 0);
-    -- El count de on, al multiplicar dos vectores; tengo que hacerlo el doble de bits que la suma de los tamaùo    
+    -- El count de on, al multiplicar dos vectores; tengo que hacerlo el doble de bits que la suma de los tama√±o    
     signal count_mult_on            : unsigned(37 downto 0)     := to_unsigned(0, 38);
     signal count_on                 : unsigned(18 downto 0)     := to_unsigned(0, 19);
     signal contador_aux             : unsigned(18 downto 0)     := to_unsigned(0, 19);
