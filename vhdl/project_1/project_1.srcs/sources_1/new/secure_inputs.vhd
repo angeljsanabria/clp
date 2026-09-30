@@ -35,8 +35,10 @@ use IEEE.NUMERIC_STD.ALL;
 entity secure_inputs is
     Port ( 
             clk            : in STD_LOGIC;
-            btn_duty_subir : in STD_LOGIC;
-            btn_duty_bajar : in STD_LOGIC;
+            btn_duty_10_subir : in STD_LOGIC;
+            btn_duty_10_bajar : in STD_LOGIC;
+            btn_duty_1_subir : in STD_LOGIC;
+            btn_duty_1_bajar : in STD_LOGIC;
             btn_duty_reset : in STD_LOGIC;
             sw_sel_frec     : in STD_LOGIC_VECTOR (1 downto 0);
             -- Salidas fisicas
@@ -46,10 +48,13 @@ entity secure_inputs is
             led_reset      : out STD_LOGIC := '0';
             -- Salidas logicas
             sel_frec        : out STD_LOGIC_VECTOR (1 downto 0);
-            duty_subir      : out STD_LOGIC := '0';
-            duty_bajar      : out STD_LOGIC := '0';
+            duty_10_subir      : out STD_LOGIC := '0';
+            duty_10_bajar      : out STD_LOGIC := '0';
+            duty_1_subir      : out STD_LOGIC := '0';
+            duty_1_bajar      : out STD_LOGIC := '0';
             duty_reset      : out STD_LOGIC := '0';
-            duty_pwm        : out unsigned(3 downto 0)
+            duty_10_pwm        : out unsigned(3 downto 0);
+            duty_1_pwm         : out unsigned(3 downto 0)
     );
 end secure_inputs;
 
@@ -66,18 +71,25 @@ architecture Behavioral of secure_inputs is
     signal led_reset_s      : STD_LOGIC := '0';
     -- Signals para aplicar meta harden
     signal sel_frec_mh      : STD_LOGIC_VECTOR (1 downto 0);
-    signal duty_subir_mh    : STD_LOGIC := '0';
-    signal duty_bajar_mh    : STD_LOGIC := '0';
+    signal duty_10_subir_mh    : STD_LOGIC := '0';
+    signal duty_10_bajar_mh    : STD_LOGIC := '0';
+    signal duty_1_subir_mh    : STD_LOGIC := '0';
+    signal duty_1_bajar_mh    : STD_LOGIC := '0';
     signal duty_reset_mh    : STD_LOGIC := '0';
-    signal duty_subir_mh_2  : STD_LOGIC := '0';
-    signal duty_bajar_mh_2  : STD_LOGIC := '0';
+    signal duty_10_subir_mh_2  : STD_LOGIC := '0';
+    signal duty_10_bajar_mh_2  : STD_LOGIC := '0';
+    signal duty_1_subir_mh_2  : STD_LOGIC := '0';
+    signal duty_1_bajar_mh_2  : STD_LOGIC := '0';
     signal duty_reset_mh_2  : STD_LOGIC := '0';
     -- contador para rebote en funcion de los 10 MHz de clock -> 30 ms es 300000 ticks de clock -> lo subi a 300 ms
     signal rebote       : unsigned(21 downto 0) := to_unsigned(0, 22);  -- Conversion function/type casting
     constant set_rebote : unsigned(21 downto 0) := to_unsigned(3000000, 22);
-    -- control de duty
-    constant paso_duty  : unsigned(3 downto 0) := to_unsigned(1, 4);
+    -- control de duty paso 10 - hasta 100
+    constant paso_10_duty  : unsigned(3 downto 0) := to_unsigned(1, 4);
     signal duty         : unsigned(3 downto 0) := to_unsigned(5, 4);
+    -- control de duty fino: 0 a 9 
+    constant paso_1_duty   : unsigned(3 downto 0) := to_unsigned(1, 4);
+    signal duty_1       : unsigned(3 downto 0) := to_unsigned(0, 4);
     
    
 begin
@@ -97,12 +109,18 @@ begin
     begin
         if rising_edge(clk) then
             -- etapas de meta harden para sincronismo
-            duty_subir_mh <= btn_duty_subir;
-            duty_subir_mh_2 <= duty_subir_mh;
+            duty_10_subir_mh <= btn_duty_10_subir;
+            duty_10_subir_mh_2 <= duty_10_subir_mh;
             
-            duty_bajar_mh <= btn_duty_bajar;
-            duty_bajar_mh_2 <= duty_bajar_mh;
+            duty_1_subir_mh <= btn_duty_1_subir;
+            duty_1_subir_mh_2 <= duty_1_subir_mh;
+
+            duty_10_bajar_mh <= btn_duty_10_bajar;
+            duty_10_bajar_mh_2 <= duty_10_bajar_mh;
             
+            duty_1_bajar_mh <= btn_duty_1_bajar;
+            duty_1_bajar_mh_2 <= duty_1_bajar_mh;
+
             duty_reset_mh <= btn_duty_reset;
             duty_reset_mh_2 <= duty_reset_mh;
             
@@ -112,36 +130,63 @@ begin
             -- fin etapas mh
             
             
-            duty_pwm <= duty;
+            duty_10_pwm <= duty;
+            duty_1_pwm <= duty_1;
             -- Si presiono subir; arranco el anti rebote y espero a que termine para bajar la signal
-            if duty_subir_mh_2 = '1' and rebote = 0 then
+            if duty_10_subir_mh_2 = '1' and rebote = 0 then
                  if duty < 10 then
-                    duty <= duty + paso_duty;
+                    duty <= duty + paso_10_duty;
+                    if duty = 9 then
+                        duty_1 <= to_unsigned(0, 4);
+                    end if;
                   end if;
-                duty_subir <= '1';
+                duty_10_subir <= '1';
                 led_subir_s <= '1';    
                 rebote <= set_rebote;
-            elsif duty_subir_mh_2 = '0' and rebote = 0 then
-                duty_subir <= '0';
+            elsif duty_10_subir_mh_2 = '0' and rebote = 0 then
+                duty_10_subir <= '0';
                 led_subir_s <= '0';
             end if;
             
             -- Si presiono bajar; arranco el anti rebote y espero a que termine para bajar la signal
-            if duty_bajar_mh_2 = '1' and rebote = 0 then
+            if duty_10_bajar_mh_2 = '1' and rebote = 0 then
                  if duty > 0 then
-                    duty <= duty - paso_duty;
+                    duty <= duty - paso_10_duty;
                  end if;
-                duty_bajar <= '1';
+                duty_10_bajar <= '1';
                 led_bajar_s <= '1';
                 rebote <= set_rebote;
-            elsif duty_bajar_mh_2 = '0' and rebote = 0 then
-                duty_bajar <= '0';
+            elsif duty_10_bajar_mh_2 = '0' and rebote = 0 then
+                duty_10_bajar <= '0';
                 led_bajar_s <= '0';
             end if;  
+            
+            -- Si presiono subir 1%; arranco el anti rebote y espero a que termine para bajar la signal
+            if duty_1_subir_mh_2 = '1' and rebote = 0 then
+                 if duty_1 < 9 and duty < 10 then
+                    duty_1 <= duty_1 + paso_1_duty;
+                 end if;
+                duty_1_subir <= '1';
+                rebote <= set_rebote;
+            elsif duty_1_subir_mh_2 = '0' and rebote = 0 then
+                duty_1_subir <= '0';
+            end if;
+            
+            -- Si presiono bajar 1%; arranco el anti rebote y espero a que termine para bajar la signal
+            if duty_1_bajar_mh_2 = '1' and rebote = 0 then
+                 if duty_1 > 0 then
+                    duty_1 <= duty_1 - paso_1_duty;
+                 end if;
+                duty_1_bajar <= '1';
+                rebote <= set_rebote;
+            elsif duty_1_bajar_mh_2 = '0' and rebote = 0 then
+                duty_1_bajar <= '0';
+            end if;
             
             -- Si presiono resetjar; arranco el anti rebote y espero a que termine para bajar la signal
             if duty_reset_mh_2 = '1' and rebote = 0 then
                 duty <= to_unsigned(5, 4);
+                duty_1 <= to_unsigned(0, 4);
                 duty_reset <= '1';
                 led_reset_s <= '1';
                 rebote <= set_rebote;
