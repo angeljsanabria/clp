@@ -82,8 +82,8 @@ architecture Behavioral of secure_inputs is
     signal duty_1_bajar_mh_2  : STD_LOGIC := '0';
     signal duty_reset_mh_2  : STD_LOGIC := '0';
     -- contador para rebote en funcion de los 10 MHz de clock -> 30 ms es 300000 ticks de clock -> lo subi a 300 ms
-    signal rebote       : unsigned(21 downto 0) := to_unsigned(0, 22);  -- Conversion function/type casting
-    constant set_rebote : unsigned(21 downto 0) := to_unsigned(3000000, 22);
+    signal rebote       : unsigned(24 downto 0) := to_unsigned(0, 25);  -- Conversion function/type casting
+    constant set_rebote : unsigned(24 downto 0) := to_unsigned(30000000, 25);
     -- control de duty paso 10 - hasta 100
     constant paso_10_duty  : unsigned(3 downto 0) := to_unsigned(1, 4);
     signal duty         : unsigned(3 downto 0) := to_unsigned(5, 4);
