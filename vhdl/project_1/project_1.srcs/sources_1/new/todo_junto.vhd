@@ -33,6 +33,8 @@ entity todo_junto is
     Port ( clk_in_pe        : in STD_LOGIC;
            btn_subir_pe     : in STD_LOGIC;
            btn_bajar_pe     : in STD_LOGIC;
+           btn_subir_1_pe   : in STD_LOGIC;
+           btn_bajar_1_pe   : in STD_LOGIC;
            btn_reset_pe     : in STD_LOGIC;
            btn_reset_clk_pe : in STD_LOGIC;
            sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
@@ -47,7 +49,7 @@ end todo_junto;
 architecture Behavioral of todo_junto is
 
     -- Declaro todos los componentes
-    -- Bloque de Clock a 10 Mhz
+    -- Bloque de Clock a 100 Mhz
     component clk_wiz_0
         port (
             clk_out1 : out STD_LOGIC;
@@ -59,20 +61,25 @@ architecture Behavioral of todo_junto is
     -- Bloque de entradas seguras
     component secure_inputs
         port (
-            clk            : in  STD_LOGIC;
-            btn_duty_subir : in  STD_LOGIC;
-            btn_duty_bajar : in  STD_LOGIC;
-            btn_duty_reset : in  STD_LOGIC;
-            sw_sel_frec    : in  STD_LOGIC_VECTOR (1 downto 0);
-            leds_rgb       : out STD_LOGIC_VECTOR (2 downto 0);
-            led_subir      : out STD_LOGIC;
-            led_bajar      : out STD_LOGIC;
-            led_reset      : out STD_LOGIC;
-            sel_frec       : out STD_LOGIC_VECTOR (1 downto 0);
-            duty_subir     : out STD_LOGIC;
-            duty_bajar     : out STD_LOGIC;
-            duty_reset     : out STD_LOGIC;
-            duty_pwm       : out unsigned(3 downto 0)
+            clk               : in  STD_LOGIC;
+            btn_duty_10_subir : in  STD_LOGIC;
+            btn_duty_10_bajar : in  STD_LOGIC;
+            btn_duty_1_subir  : in  STD_LOGIC;
+            btn_duty_1_bajar  : in  STD_LOGIC;
+            btn_duty_reset    : in  STD_LOGIC;
+            sw_sel_frec       : in  STD_LOGIC_VECTOR (1 downto 0);
+            leds_rgb          : out STD_LOGIC_VECTOR (2 downto 0);
+            led_subir         : out STD_LOGIC;
+            led_bajar         : out STD_LOGIC;
+            led_reset         : out STD_LOGIC;
+            sel_frec          : out STD_LOGIC_VECTOR (1 downto 0);
+            duty_10_subir     : out STD_LOGIC;
+            duty_10_bajar     : out STD_LOGIC;
+            duty_1_subir      : out STD_LOGIC;
+            duty_1_bajar      : out STD_LOGIC;
+            duty_reset        : out STD_LOGIC;
+            duty_10_pwm       : out unsigned(3 downto 0);
+            duty_1_pwm        : out unsigned(3 downto 0)
         );
     end component;
 
@@ -82,6 +89,7 @@ architecture Behavioral of todo_junto is
             clk      : in  STD_LOGIC;
             reset    : in  STD_LOGIC;
             duty     : in  unsigned(3 downto 0);
+            duty_1   : in  unsigned(3 downto 0);
             sel_frec : in  STD_LOGIC_VECTOR (1 downto 0);
             pwm_out  : out STD_LOGIC
         );
@@ -91,6 +99,7 @@ architecture Behavioral of todo_junto is
     signal clk_10m      : STD_LOGIC;
     signal sel_frec_s   : STD_LOGIC_VECTOR (1 downto 0);
     signal duty_s       : unsigned(3 downto 0);
+    signal duty_1_s     : unsigned(3 downto 0);
     signal duty_reset_s : STD_LOGIC;
 
 begin
@@ -98,26 +107,31 @@ begin
     clock_wiz_unit : clk_wiz_0
         port map (
             clk_out1 => clk_10m,
-            reset    => btn_reset_clk_pe,
+            reset    => '0',
             clk_in1  => clk_in_pe
         );
 
     secure_inputs_unit : secure_inputs
         port map (
-            clk            => clk_10m,
-            btn_duty_subir => btn_subir_pe,
-            btn_duty_bajar => btn_bajar_pe,
-            btn_duty_reset => btn_reset_pe,
-            sw_sel_frec    => sw_frec_pe,
-            leds_rgb       => leds_rgb_pe_o,
-            led_subir      => led_subir_pe_o,
-            led_bajar      => led_bajar_pe_o,
-            led_reset      => led_reset_pe_o,
-            sel_frec       => sel_frec_s,
-            duty_subir     => open,
-            duty_bajar     => open,
-            duty_reset     => duty_reset_s,
-            duty_pwm       => duty_s
+            clk               => clk_10m,
+            btn_duty_10_subir => btn_subir_pe,
+            btn_duty_10_bajar => btn_bajar_pe,
+            btn_duty_1_subir  => btn_subir_1_pe,
+            btn_duty_1_bajar  => btn_bajar_1_pe,
+            btn_duty_reset    => '0',
+            sw_sel_frec       => sw_frec_pe,
+            leds_rgb          => leds_rgb_pe_o,
+            led_subir         => led_subir_pe_o,
+            led_bajar         => led_bajar_pe_o,
+            led_reset         => led_reset_pe_o,
+            sel_frec          => sel_frec_s,
+            duty_10_subir     => open,
+            duty_10_bajar     => open,
+            duty_1_subir      => open,
+            duty_1_bajar      => open,
+            duty_reset        => duty_reset_s,
+            duty_10_pwm       => duty_s,
+            duty_1_pwm        => duty_1_s
         );
 
     control_pwm_unit : control_pwm
@@ -125,11 +139,12 @@ begin
             clk      => clk_10m,
             reset    => duty_reset_s,
             duty     => duty_s,
+            duty_1   => duty_1_s,
             sel_frec => sel_frec_s,
             pwm_out  => pwm_pe_o
         );
 
     -- Valor binario del duty (0 a 10) en LED0 a LED3
-    leds_duty_pe_o <= std_logic_vector(duty_s);
+    leds_duty_pe_o <= std_logic_vector(duty_1_s);
 
 end Behavioral;

@@ -6,8 +6,10 @@ set_property -dict { PACKAGE_PIN M19  IOSTANDARD LVCMOS33 } [get_ports { sw_frec
 ## Botones: subir, bajar y reset duty; reset clock
 set_property -dict { PACKAGE_PIN D19    IOSTANDARD LVCMOS33 } [get_ports { btn_subir_pe }]; #IO_L4P_T0_35 Sch=BTN0
 set_property -dict { PACKAGE_PIN D20    IOSTANDARD LVCMOS33 } [get_ports { btn_bajar_pe }]; #IO_L4N_T0_35 Sch=BTN1
-set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports { btn_reset_pe }]; #IO_L9N_T1_DQS_AD3N_35 Sch=BTN2
-set_property -dict { PACKAGE_PIN L19    IOSTANDARD LVCMOS33 } [get_ports { btn_reset_clk_pe }]; #IO_L9P_T1_DQS_AD3P_35 Sch=BTN3
+set_property -dict { PACKAGE_PIN Y18   IOSTANDARD LVCMOS33 } [get_ports { btn_reset_pe }]; #IO_L17P_T2_34 Sch=JA1_P (Pin 1)
+set_property -dict { PACKAGE_PIN Y19   IOSTANDARD LVCMOS33 } [get_ports { btn_reset_clk_pe }]; #IO_L17N_T2_34 Sch=JA1_N (Pin 2)
+set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports { btn_subir_1_pe }]; #IO_L9N_T1_DQS_AD3N_35 Sch=BTN2
+set_property -dict { PACKAGE_PIN L19    IOSTANDARD LVCMOS33 } [get_ports { btn_bajar_1_pe }]; #IO_L9P_T1_DQS_AD3P_35 Sch=BTN3
 
 # Outpus usados:
 ## Leds RGBs: uno para indicar la frecuencia y el otro para cuando se presiona un boton de control de duty

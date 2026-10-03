@@ -167,6 +167,7 @@ begin
                     duty_1 <= duty_1 + paso_1_duty;
                  end if;
                 duty_1_subir <= '1';
+                led_subir_s <= '1';
                 rebote <= set_rebote;
             elsif duty_1_subir_mh_2 = '0' and rebote = 0 then
                 duty_1_subir <= '0';
@@ -178,6 +179,7 @@ begin
                     duty_1 <= duty_1 - paso_1_duty;
                  end if;
                 duty_1_bajar <= '1';
+                led_bajar_s <= '1';
                 rebote <= set_rebote;
             elsif duty_1_bajar_mh_2 = '0' and rebote = 0 then
                 duty_1_bajar <= '0';
