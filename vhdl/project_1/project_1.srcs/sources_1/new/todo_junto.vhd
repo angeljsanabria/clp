@@ -118,7 +118,7 @@ begin
             btn_duty_10_bajar => btn_bajar_pe,
             btn_duty_1_subir  => btn_subir_1_pe,
             btn_duty_1_bajar  => btn_bajar_1_pe,
-            btn_duty_reset    => '0',
+            btn_duty_reset    => btn_reset_clk_pe,
             sw_sel_frec       => sw_frec_pe,
             leds_rgb          => leds_rgb_pe_o,
             led_subir         => led_subir_pe_o,
