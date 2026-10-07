@@ -71,8 +71,6 @@ architecture Behavioral of secure_inputs is
     signal led_subir_duty_1       : STD_LOGIC := '0';
     signal led_bajar_duty_1       : STD_LOGIC := '0';
     signal led_reset_s      : STD_LOGIC := '0';
-    -- Signals para aplicar meta harden
-    signal sel_frec_mh      : STD_LOGIC_VECTOR (1 downto 0);
     
     signal duty_10_subir_aux    : STD_LOGIC := '0';
     signal duty_10_bajar_aux    : STD_LOGIC := '0';
@@ -183,6 +181,7 @@ begin
             duty_1_bajar <= duty_1_bajar_aux;
             duty_reset <= duty_reset_aux;
             sel_frec <= sel_frec_aux;    
+            sel_color <= sel_frec_aux; 
             
             duty_10_pwm <= duty;
             duty_1_pwm <= duty_1;
