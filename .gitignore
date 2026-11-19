@@ -70,21 +70,34 @@ xsim.dir/
 *.vcd
 *.saif
 
-# --- SDK / Vitis (export y workspace Eclipse) ---
-*.sdk/
+# --- SDK / Vitis (workspace Eclipse; app en *.sdk/<app>/src) ---
 *.vitis/
 .sdk/
 .vitis/
-.metadata/
+**/.metadata/
 RemoteSystemsTempFiles/
 ide_debug/
+**/*_bsp/
+**/*_hw_platform_*/
 *.hdf
 *.xsa
+*.log.bak
+
+# --- Outputs de compilacion C (bare-metal / SDK / gcc) ---
 *.elf
 *.o
 *.d
+*.a
 *.xo
-*.log.bak
+*.map
+*.siz
+*.srec
+*.hex
+*.lst
+*.exe
+**/Debug/
+**/Release/
+**/build/
 
 # --- SO / editor ---
 Thumbs.db
