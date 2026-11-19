@@ -1,16 +1,20 @@
-# add vivado files
+# --- Vivado / Zynq (Arty Z7-10): no versionar artefactos regenerables ---
+# Si conviene versionar: .xpr, .bd, .xci, fuentes (.vhd/.v/.sv), .xdc, Tcl de recreate
 
-# --- Vivado 2018.3: artefactos de sesion ---
+# --- Vivado: artefactos de sesion ---
 *.jou
 *.log
 *.str
 *.debug
 *.tmp
 *.dmp
+*.lso
 webtalk*.xml
 webtalk*.jou
 webtalk*.log
 usage_statistics*
+vivado*.backup.*
+hs_err_pid*
 
 # --- Directorios que Vivado regenera ---
 .Xil/
@@ -20,15 +24,33 @@ usage_statistics*
 *.hw/
 *.ip_user_files/
 *.gen/
-*.sdk/
-*.vitis/
+*.cache
+*.runs
+*.sim
+*.hw
 
-# --- Checkpoints, reportes y netlists generados ---
+# --- Block Design: IP generado (se regenera desde el .bd) ---
+**/bd/*/ip/
+**/bd/*/ipshared/
+**/bd/*/hw_handoff/
+**/bd/*/synth/
+**/bd/*/sim/
+**/bd/*/hdl/
+**/bd/*/*.bda
+**/bd/*/*.hwdef
+**/bd/*/*.bxml
+
+# --- Checkpoints, reportes, netlists y bitstream ---
 *.dcp
 *.pb
 *.wdf
 *.rpt
 *.html
+*.bit
+*.bin
+*.mcs
+*.mmi
+*.ltx
 *_stub.v
 *_stub.vhd
 *_stub.vhdl
@@ -41,7 +63,32 @@ usage_statistics*
 *.backup.jou
 *.backup.log
 
-# --- Simulacion (si usas xsim / ISIM) ---
+# --- Simulacion (xsim) ---
 xsim.dir/
 *.wdb
 *.wcfg.bak
+*.vcd
+*.saif
+
+# --- SDK / Vitis (export y workspace Eclipse) ---
+*.sdk/
+*.vitis/
+.sdk/
+.vitis/
+.metadata/
+RemoteSystemsTempFiles/
+ide_debug/
+*.hdf
+*.xsa
+*.elf
+*.o
+*.d
+*.xo
+*.log.bak
+
+# --- SO / editor ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
