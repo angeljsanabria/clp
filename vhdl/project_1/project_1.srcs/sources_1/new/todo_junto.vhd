@@ -37,6 +37,12 @@ entity todo_junto is
            btn_bajar_1_pe   : in STD_LOGIC;
            btn_reset_pe     : in STD_LOGIC;
            btn_reset_clk_pe : in STD_LOGIC;
+           -- Agrego AXI GPIO (PS -> PL); OR con botones anteriores
+           -- ps_duty_10_subir : in STD_LOGIC;
+           -- ps_duty_10_bajar : in STD_LOGIC;
+           -- ps_duty_1_subir  : in STD_LOGIC;
+           -- ps_duty_1_bajar  : in STD_LOGIC;
+           -- ps_duty_reset    : in STD_LOGIC;
            sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
            led_subir_pe_o   : out STD_LOGIC;
            led_bajar_pe_o   : out STD_LOGIC;
@@ -101,8 +107,34 @@ architecture Behavioral of todo_junto is
     signal duty_s       : unsigned(3 downto 0);
     signal duty_1_s     : unsigned(3 downto 0);
     signal duty_reset_s : STD_LOGIC;
+    -- Temporal hasta AXI GPIO: ports comentados arriba; aca en '0'
+    signal ps_duty_10_subir : STD_LOGIC := '0';
+    signal ps_duty_10_bajar : STD_LOGIC := '0';
+    signal ps_duty_1_subir  : STD_LOGIC := '0';
+    signal ps_duty_1_bajar  : STD_LOGIC := '0';
+    signal ps_duty_reset    : STD_LOGIC := '0';
+    -- Borrar ahsta aca cuando agrege el AXI GPIO
+    -- Entradas que combinan con OR el boton del hardware que era entrada PL y el gpio PS
+    signal btn_10_subir_ps_pl : STD_LOGIC;
+    signal btn_10_bajar_ps_pl : STD_LOGIC;
+    signal btn_1_subir_ps_pl  : STD_LOGIC;
+    signal btn_1_bajar_ps_pl  : STD_LOGIC;
+    signal btn_reset_ps_pl    : STD_LOGIC;
 
 begin
+    --  Harcode de las señales en 0, hasta que tenga el AXI GPIO
+    ps_duty_10_subir <= '0';
+    ps_duty_10_bajar <= '0';
+    ps_duty_1_subir  <= '0';
+    ps_duty_1_bajar  <= '0';
+    ps_duty_reset    <= '0';
+
+    -- Estas son las que reemplazan btn_subir_pe; en secure_inputs
+    btn_10_subir_ps_pl <= btn_subir_pe   or ps_duty_10_subir;
+    btn_10_bajar_ps_pl <= btn_bajar_pe   or ps_duty_10_bajar;
+    btn_1_subir_ps_pl  <= btn_subir_1_pe or ps_duty_1_subir;
+    btn_1_bajar_ps_pl  <= btn_bajar_1_pe or ps_duty_1_bajar;
+    btn_reset_ps_pl    <= btn_reset_pe   or ps_duty_reset;
 
     clock_wiz_unit : clk_wiz_0
         port map (
@@ -114,11 +146,11 @@ begin
     secure_inputs_unit : secure_inputs
         port map (
             clk               => clk_10m,
-            btn_duty_10_subir => btn_subir_pe,
-            btn_duty_10_bajar => btn_bajar_pe,
-            btn_duty_1_subir  => btn_subir_1_pe,
-            btn_duty_1_bajar  => btn_bajar_1_pe,
-            btn_duty_reset    => btn_reset_clk_pe,
+            btn_duty_10_subir => btn_10_subir_ps_pl,
+            btn_duty_10_bajar => btn_10_bajar_ps_pl,
+            btn_duty_1_subir  => btn_1_subir_ps_pl,
+            btn_duty_1_bajar  => btn_1_bajar_ps_pl,
+            btn_duty_reset    => btn_reset_ps_pl,
             sw_sel_frec       => sw_frec_pe,
             leds_rgb          => leds_rgb_pe_o,
             led_subir         => led_subir_pe_o,
