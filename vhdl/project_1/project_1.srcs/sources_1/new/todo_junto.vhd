@@ -43,6 +43,8 @@ entity todo_junto is
            -- ps_duty_1_subir  : in STD_LOGIC;
            -- ps_duty_1_bajar  : in STD_LOGIC;
            -- ps_duty_reset    : in STD_LOGIC;
+           -- AXI GPIO (PL -> PS): status 32 bits para lectura
+           -- pl_to_ps_status : out STD_LOGIC_VECTOR (31 downto 0);
            sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
            led_subir_pe_o   : out STD_LOGIC;
            led_bajar_pe_o   : out STD_LOGIC;
@@ -120,6 +122,8 @@ architecture Behavioral of todo_junto is
     signal btn_1_subir_ps_pl  : STD_LOGIC;
     signal btn_1_bajar_ps_pl  : STD_LOGIC;
     signal btn_reset_ps_pl    : STD_LOGIC;
+    -- Status hacia AXI GPIO de entrada (PL -> PS)
+    signal pl_to_ps_status : STD_LOGIC_VECTOR (31 downto 0);
 
 begin
     --  Harcode de las señales en 0, hasta que tenga el AXI GPIO
@@ -178,5 +182,15 @@ begin
 
     -- Valor binario del duty (0 a 10) en LED0 a LED3
     leds_duty_pe_o <= std_logic_vector(duty_1_s);
+
+    -- Para AXI GPIO de lectura
+    -- Menos significativo [3:0]=duty_1
+    -- [7:4]=duty_10
+    -- mas significativo [9:8]=sel_frec
+    -- relleno 0
+    pl_to_ps_status(3 downto 0)   <= std_logic_vector(duty_1_s);
+    pl_to_ps_status(7 downto 4)   <= std_logic_vector(duty_s);
+    pl_to_ps_status(9 downto 8)   <= sel_frec_s;
+    pl_to_ps_status(31 downto 10) <= (others => '0');
 
 end Behavioral;
