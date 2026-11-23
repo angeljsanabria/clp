@@ -47,6 +47,10 @@
  *   Buscar "AXI_GPIO_READ_FREC_AND_DUTY" para encontrar la definicion del registro y el ID
  *   XPAR_AXI_GPIO_READ_FREC_AND_DUTY_DEVICE_ID 0
  *   XPAR_AXI_GPIO_READ_FREC_AND_DUTY_BASEADDR 0x41200000
+ *
+ *   Dejar abierto:
+ *    design_block_base_wrapper_hw_platform_1
+ *    standalone_bsp_1
  */
 
 #include <stdio.h>

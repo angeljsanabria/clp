@@ -38,11 +38,11 @@ entity todo_junto is
            btn_reset_pe     : in STD_LOGIC;
            btn_reset_clk_pe : in STD_LOGIC;
            -- Agrego AXI GPIO (PS -> PL); OR con botones anteriores
-           -- ps_duty_10_subir : in STD_LOGIC;
-           -- ps_duty_10_bajar : in STD_LOGIC;
-           -- ps_duty_1_subir  : in STD_LOGIC;
-           -- ps_duty_1_bajar  : in STD_LOGIC;
-           -- ps_duty_reset    : in STD_LOGIC;
+           ps_duty_10_subir : in STD_LOGIC;
+           ps_duty_10_bajar : in STD_LOGIC;
+           ps_duty_1_subir  : in STD_LOGIC;
+           ps_duty_1_bajar  : in STD_LOGIC;
+           ps_duty_reset    : in STD_LOGIC;
            -- AXI GPIO (PL -> PS): status 32 bits para lectura
            pl_to_ps_status  : out STD_LOGIC_VECTOR (31 downto 0);
            sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
@@ -109,13 +109,6 @@ architecture Behavioral of todo_junto is
     signal duty_s       : unsigned(3 downto 0);
     signal duty_1_s     : unsigned(3 downto 0);
     signal duty_reset_s : STD_LOGIC;
-    -- Temporal hasta AXI GPIO: ports comentados arriba; aca en '0'
-    signal ps_duty_10_subir : STD_LOGIC := '0';
-    signal ps_duty_10_bajar : STD_LOGIC := '0';
-    signal ps_duty_1_subir  : STD_LOGIC := '0';
-    signal ps_duty_1_bajar  : STD_LOGIC := '0';
-    signal ps_duty_reset    : STD_LOGIC := '0';
-    -- Borrar ahsta aca cuando agrege el AXI GPIO
     -- Entradas que combinan con OR el boton del hardware que era entrada PL y el gpio PS
     signal btn_10_subir_ps_pl : STD_LOGIC;
     signal btn_10_bajar_ps_pl : STD_LOGIC;
@@ -124,13 +117,6 @@ architecture Behavioral of todo_junto is
     signal btn_reset_ps_pl    : STD_LOGIC;
 
 begin
-    --  Harcode de las señales en 0, hasta que tenga el AXI GPIO
-    ps_duty_10_subir <= '0';
-    ps_duty_10_bajar <= '0';
-    ps_duty_1_subir  <= '0';
-    ps_duty_1_bajar  <= '0';
-    ps_duty_reset    <= '0';
-
     -- Estas son las que reemplazan btn_subir_pe; en secure_inputs
     btn_10_subir_ps_pl <= btn_subir_pe   or ps_duty_10_subir;
     btn_10_bajar_ps_pl <= btn_bajar_pe   or ps_duty_10_bajar;
