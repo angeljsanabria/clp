@@ -44,7 +44,7 @@ entity todo_junto is
            -- ps_duty_1_bajar  : in STD_LOGIC;
            -- ps_duty_reset    : in STD_LOGIC;
            -- AXI GPIO (PL -> PS): status 32 bits para lectura
-           -- pl_to_ps_status : out STD_LOGIC_VECTOR (31 downto 0);
+           pl_to_ps_status : out STD_LOGIC_VECTOR (31 downto 0);
            sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
            led_subir_pe_o   : out STD_LOGIC;
            led_bajar_pe_o   : out STD_LOGIC;
@@ -122,8 +122,6 @@ architecture Behavioral of todo_junto is
     signal btn_1_subir_ps_pl  : STD_LOGIC;
     signal btn_1_bajar_ps_pl  : STD_LOGIC;
     signal btn_reset_ps_pl    : STD_LOGIC;
-    -- Status hacia AXI GPIO de entrada (PL -> PS)
-    signal pl_to_ps_status : STD_LOGIC_VECTOR (31 downto 0);
 
 begin
     --  Harcode de las señales en 0, hasta que tenga el AXI GPIO
