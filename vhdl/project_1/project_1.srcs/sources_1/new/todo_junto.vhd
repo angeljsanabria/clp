@@ -38,11 +38,12 @@ entity todo_junto is
            btn_reset_pe     : in STD_LOGIC;
            btn_reset_clk_pe : in STD_LOGIC;
            -- Agrego AXI GPIO (PS -> PL); OR con botones anteriores
-           ps_duty_10_subir : in STD_LOGIC;
-           ps_duty_10_bajar : in STD_LOGIC;
-           ps_duty_1_subir  : in STD_LOGIC;
-           ps_duty_1_bajar  : in STD_LOGIC;
-           ps_duty_reset    : in STD_LOGIC;
+           ps_duty_btns     : in STD_LOGIC_VECTOR (4 downto 0);
+           --ps_duty_10_subir : in STD_LOGIC;
+           --ps_duty_10_bajar : in STD_LOGIC;
+           --ps_duty_1_subir  : in STD_LOGIC;
+           --ps_duty_1_bajar  : in STD_LOGIC;
+           --ps_duty_reset    : in STD_LOGIC;
            -- AXI GPIO (PL -> PS): status 32 bits para lectura
            pl_to_ps_status  : out STD_LOGIC_VECTOR (31 downto 0);
            sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
@@ -118,11 +119,11 @@ architecture Behavioral of todo_junto is
 
 begin
     -- Estas son las que reemplazan btn_subir_pe; en secure_inputs
-    btn_10_subir_ps_pl <= btn_subir_pe   or ps_duty_10_subir;
-    btn_10_bajar_ps_pl <= btn_bajar_pe   or ps_duty_10_bajar;
-    btn_1_subir_ps_pl  <= btn_subir_1_pe or ps_duty_1_subir;
-    btn_1_bajar_ps_pl  <= btn_bajar_1_pe or ps_duty_1_bajar;
-    btn_reset_ps_pl    <= btn_reset_pe   or ps_duty_reset;
+    btn_10_subir_ps_pl <= btn_subir_pe   or ps_duty_btns(0);
+    btn_10_bajar_ps_pl <= btn_bajar_pe   or ps_duty_btns(1);
+    btn_1_subir_ps_pl  <= btn_subir_1_pe or ps_duty_btns(2);
+    btn_1_bajar_ps_pl  <= btn_bajar_1_pe or ps_duty_btns(3);
+    btn_reset_ps_pl    <= btn_reset_pe   or ps_duty_btns(4);
 
     clock_wiz_unit : clk_wiz_0
         port map (

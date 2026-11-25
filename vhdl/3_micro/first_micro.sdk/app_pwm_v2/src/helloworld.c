@@ -77,12 +77,6 @@
 #define IP_SHIFT_READ_FREC			8
 
 // Caracteres de comandos
-// Mapa gpio_io_o[4:0] segun BD:
-//   bit0 0x01 = ps_duty_10_subir
-//   bit1 0x02 = ps_duty_10_bajar
-//   bit2 0x04 = ps_duty_1_subir
-//   bit3 0x08 = ps_duty_1_bajar
-//   bit4 0x10 = ps_duty_reset
 #define CMD_DUTY_MENOS_1			'A'
 #define AXI_GPIO_BIT_DUTY_MENOS_1	0x08
 #define CMD_DUTY_MAS_1				'S'

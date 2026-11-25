@@ -22,6 +22,7 @@
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="ProjectType" Val="Default"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../my_ip_pwm_write_duty_read_frec_duty_v3"/>
     <Option Name="IPRepoPath" Val="$PPRDIR/../my_ip_pwm_write_duty_read_frec_duty_v2"/>
     <Option Name="IPRepoPath" Val="$PPRDIR/../my_ip_pwm_read_frec_duty_v2"/>
     <Option Name="IPRepoPath" Val="$PPRDIR/../my_ip_pwm_read_frec_duty_v1"/>
@@ -129,7 +130,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../my_ip_pwm_write_duty_read_frec_duty_v2/component.xml">
+      <File Path="$PPRDIR/../my_ip_pwm_write_duty_read_frec_duty_v3/component.xml">
         <FileInfo SFType="IPXACT"/>
       </File>
       <Config>
