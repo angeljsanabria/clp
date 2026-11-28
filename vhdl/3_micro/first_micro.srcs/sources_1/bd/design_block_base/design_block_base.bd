@@ -5,7 +5,8 @@
       "device": "xc7z010clg400-1",
       "name": "design_block_base",
       "synth_flow_mode": "Hierarchical",
-      "tool_version": "2018.3"
+      "tool_version": "2018.3",
+      "validated": "true"
     },
     "design_tree": {
       "processing_system7_0": "",
@@ -25,11 +26,67 @@
     "interface_ports": {
       "DDR": {
         "mode": "Master",
-        "vlnv": "xilinx.com:interface:ddrx_rtl:1.0"
+        "vlnv": "xilinx.com:interface:ddrx_rtl:1.0",
+        "parameters": {
+          "AXI_ARBITRATION_SCHEME": {
+            "value": "TDM",
+            "value_src": "default"
+          },
+          "BURST_LENGTH": {
+            "value": "8",
+            "value_src": "default"
+          },
+          "CAN_DEBUG": {
+            "value": "false",
+            "value_src": "default"
+          },
+          "CAS_LATENCY": {
+            "value": "11",
+            "value_src": "default"
+          },
+          "CAS_WRITE_LATENCY": {
+            "value": "11",
+            "value_src": "default"
+          },
+          "CS_ENABLED": {
+            "value": "true",
+            "value_src": "default"
+          },
+          "DATA_MASK_ENABLED": {
+            "value": "true",
+            "value_src": "default"
+          },
+          "DATA_WIDTH": {
+            "value": "8",
+            "value_src": "default"
+          },
+          "MEMORY_TYPE": {
+            "value": "COMPONENTS",
+            "value_src": "default"
+          },
+          "MEM_ADDR_MAP": {
+            "value": "ROW_COLUMN_BANK",
+            "value_src": "default"
+          },
+          "SLOT": {
+            "value": "Single",
+            "value_src": "default"
+          },
+          "TIMEPERIOD_PS": {
+            "value": "1250",
+            "value_src": "default"
+          }
+        }
       },
       "FIXED_IO": {
         "mode": "Master",
-        "vlnv": "xilinx.com:display_processing_system7:fixedio_rtl:1.0"
+        "vlnv": "xilinx.com:display_processing_system7:fixedio_rtl:1.0",
+        "parameters": {
+          "CAN_DEBUG": {
+            "value": "false",
+            "value_src": "default"
+          }
+        }
       }
     },
     "ports": {
@@ -1441,10 +1498,10 @@
           }
         },
         "interface_nets": {
-          "xbar_to_m01_couplers": {
+          "ps7_0_axi_periph_to_s00_couplers": {
             "interface_ports": [
-              "xbar/M01_AXI",
-              "m01_couplers/S_AXI"
+              "S00_AXI",
+              "s00_couplers/S_AXI"
             ]
           },
           "s00_couplers_to_xbar": {
@@ -1459,22 +1516,22 @@
               "m00_couplers/M_AXI"
             ]
           },
-          "xbar_to_m00_couplers": {
-            "interface_ports": [
-              "xbar/M00_AXI",
-              "m00_couplers/S_AXI"
-            ]
-          },
           "m01_couplers_to_ps7_0_axi_periph": {
             "interface_ports": [
               "M01_AXI",
               "m01_couplers/M_AXI"
             ]
           },
-          "ps7_0_axi_periph_to_s00_couplers": {
+          "xbar_to_m00_couplers": {
             "interface_ports": [
-              "S00_AXI",
-              "s00_couplers/S_AXI"
+              "xbar/M00_AXI",
+              "m00_couplers/S_AXI"
+            ]
+          },
+          "xbar_to_m01_couplers": {
+            "interface_ports": [
+              "xbar/M01_AXI",
+              "m01_couplers/S_AXI"
             ]
           }
         },
@@ -1510,16 +1567,13 @@
         "xci_name": "design_block_base_rst_ps7_0_100M_0"
       },
       "my_ip_pwm_write_duty_0": {
-        "vlnv": "xilinx.com:user:my_ip_pwm_write_duty_read_frec_duty_v2:1.0",
-        "xci_name": "design_block_base_my_ip_pwm_write_duty_0_0"
+        "vlnv": "xilinx.com:user:my_ip_pwm_write_duty_read_frec_duty_v3:1.0",
+        "xci_name": "design_block_base_my_ip_pwm_write_duty_0_1"
       },
       "axi_gpio_write_duty_and_reset": {
         "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-        "xci_name": "design_block_base_axi_gpio_0_1",
+        "xci_name": "design_block_base_axi_gpio_0_2",
         "parameters": {
-          "C_ALL_INPUTS": {
-            "value": "0"
-          },
           "C_ALL_OUTPUTS": {
             "value": "1"
           },
@@ -1571,8 +1625,8 @@
           "axi_gpio_read_frec_and_duty/s_axi_aclk",
           "ps7_0_axi_periph/M00_ACLK",
           "ps7_0_axi_periph/ACLK",
-          "axi_gpio_write_duty_and_reset/s_axi_aclk",
-          "ps7_0_axi_periph/M01_ACLK"
+          "ps7_0_axi_periph/M01_ACLK",
+          "axi_gpio_write_duty_and_reset/s_axi_aclk"
         ]
       },
       "processing_system7_0_FCLK_RESET0_N": {
@@ -1588,14 +1642,20 @@
           "axi_gpio_read_frec_and_duty/s_axi_aresetn",
           "ps7_0_axi_periph/M00_ARESETN",
           "ps7_0_axi_periph/ARESETN",
-          "axi_gpio_write_duty_and_reset/s_axi_aresetn",
-          "ps7_0_axi_periph/M01_ARESETN"
+          "ps7_0_axi_periph/M01_ARESETN",
+          "axi_gpio_write_duty_and_reset/s_axi_aresetn"
         ]
       },
       "my_ip_pwm_write_duty_0_pl_to_ps_status": {
         "ports": [
           "my_ip_pwm_write_duty_0/pl_to_ps_status",
           "axi_gpio_read_frec_and_duty/gpio_io_i"
+        ]
+      },
+      "axi_gpio_write_duty_and_reset_gpio_io_o": {
+        "ports": [
+          "axi_gpio_write_duty_and_reset/gpio_io_o",
+          "my_ip_pwm_write_duty_0/ps_duty_btns"
         ]
       },
       "btn_bajar_1_pe_0_1": {

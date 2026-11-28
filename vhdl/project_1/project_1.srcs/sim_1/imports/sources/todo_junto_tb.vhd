@@ -33,8 +33,9 @@ architecture todo_junto_tb_arc of todo_junto_tb is
     signal btn_bajar_pe_tb      : STD_LOGIC := '0';
     signal btn_subir_1_pe_tb    : STD_LOGIC := '0';
     signal btn_bajar_1_pe_tb    : STD_LOGIC := '0';
-    signal btn_reset_pe_tb      : STD_LOGIC := '0';
     signal btn_reset_clk_pe_tb  : STD_LOGIC := '0';
+    signal ps_duty_btns_tb      : STD_LOGIC_VECTOR (4 downto 0) := (others => '0');
+    signal pl_to_ps_status_tb   : STD_LOGIC_VECTOR (31 downto 0);
     signal sw_frec_pe_tb           : STD_LOGIC_VECTOR (1 downto 0) := "00";
     signal led_subir_pe_o_tb       : STD_LOGIC;
     signal led_bajar_pe_o_tb       : STD_LOGIC;
@@ -51,8 +52,9 @@ architecture todo_junto_tb_arc of todo_junto_tb is
             btn_bajar_pe     : in STD_LOGIC;
             btn_subir_1_pe   : in STD_LOGIC;
             btn_bajar_1_pe   : in STD_LOGIC;
-            btn_reset_pe     : in STD_LOGIC;
             btn_reset_clk_pe : in STD_LOGIC;
+            ps_duty_btns     : in STD_LOGIC_VECTOR (4 downto 0);
+            pl_to_ps_status  : out STD_LOGIC_VECTOR (31 downto 0);
             sw_frec_pe       : in STD_LOGIC_VECTOR (1 downto 0);
             led_subir_pe_o   : out STD_LOGIC;
             led_bajar_pe_o   : out STD_LOGIC;
@@ -124,10 +126,11 @@ begin
         sw_frec_pe_tb <= "11";
         wait for 60 ms;
 
-        -- Prueba reset
+        -- Prueba reset desde PS (bit 4)
         wait until rising_edge(clk_tb);
-        btn_reset_pe_tb <= '1';
+        ps_duty_btns_tb(4) <= '1';
         wait for 60 ms;
+        ps_duty_btns_tb(4) <= '0';
 
         wait;
     end process;
@@ -138,8 +141,9 @@ begin
         btn_bajar_pe     => btn_bajar_pe_tb,
         btn_subir_1_pe   => btn_subir_1_pe_tb,
         btn_bajar_1_pe   => btn_bajar_1_pe_tb,
-        btn_reset_pe     => btn_reset_pe_tb,
         btn_reset_clk_pe => btn_reset_clk_pe_tb,
+        ps_duty_btns     => ps_duty_btns_tb,
+        pl_to_ps_status  => pl_to_ps_status_tb,
         sw_frec_pe       => sw_frec_pe_tb,
         led_subir_pe_o   => led_subir_pe_o_tb,
         led_bajar_pe_o   => led_bajar_pe_o_tb,

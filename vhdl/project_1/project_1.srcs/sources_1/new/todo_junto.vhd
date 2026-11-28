@@ -35,7 +35,7 @@ entity todo_junto is
            btn_bajar_pe     : in STD_LOGIC;
            btn_subir_1_pe   : in STD_LOGIC;
            btn_bajar_1_pe   : in STD_LOGIC;
-           btn_reset_pe     : in STD_LOGIC;
+           -- btn_reset_pe: eliminado; reset duty solo desde PS (ps_duty_btns(4))
            btn_reset_clk_pe : in STD_LOGIC;
            -- Agrego AXI GPIO (PS -> PL); OR con botones anteriores
            ps_duty_btns     : in STD_LOGIC_VECTOR (4 downto 0);
@@ -123,7 +123,8 @@ begin
     btn_10_bajar_ps_pl <= btn_bajar_pe   or ps_duty_btns(1);
     btn_1_subir_ps_pl  <= btn_subir_1_pe or ps_duty_btns(2);
     btn_1_bajar_ps_pl  <= btn_bajar_1_pe or ps_duty_btns(3);
-    btn_reset_ps_pl    <= btn_reset_pe   or ps_duty_btns(4);
+    -- Reset duty solo desde PS (sin boton fisico)
+    btn_reset_ps_pl    <= ps_duty_btns(4);
 
     clock_wiz_unit : clk_wiz_0
         port map (

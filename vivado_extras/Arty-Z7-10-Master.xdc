@@ -6,7 +6,8 @@ set_property -dict { PACKAGE_PIN M19  IOSTANDARD LVCMOS33 } [get_ports { sw_frec
 ## Botones: subir, bajar y reset duty; reset clock
 set_property -dict { PACKAGE_PIN D19    IOSTANDARD LVCMOS33 } [get_ports { btn_subir_pe }]; #IO_L4P_T0_35 Sch=BTN0
 set_property -dict { PACKAGE_PIN D20    IOSTANDARD LVCMOS33 } [get_ports { btn_bajar_pe }]; #IO_L4N_T0_35 Sch=BTN1
-set_property -dict { PACKAGE_PIN Y18   IOSTANDARD LVCMOS33 } [get_ports { btn_reset_pe }]; #IO_L17P_T2_34 Sch=JA1_P (Pin 1)
+# Reset duty fisico deshabilitado en top (solo PS); evita error si el puerto no se usa en implementacion
+#set_property -dict { PACKAGE_PIN Y18   IOSTANDARD LVCMOS33 } [get_ports { btn_reset_pe }]; #IO_L17P_T2_34 Sch=JA1_P (Pin 1)
 #set_property -dict { PACKAGE_PIN Y19   IOSTANDARD LVCMOS33 } [get_ports { btn_reset_clk_pe }]; #IO_L17N_T2_34 Sch=JA1_N (Pin 2)
 set_property -dict { PACKAGE_PIN T14   IOSTANDARD LVCMOS33 } [get_ports { btn_reset_clk_pe  }]; #IO_L5P_T0_34            Sch=CK_IO0
 set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports { btn_subir_1_pe }]; #IO_L9N_T1_DQS_AD3N_35 Sch=BTN2
