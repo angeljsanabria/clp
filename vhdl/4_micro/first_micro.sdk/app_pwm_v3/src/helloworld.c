@@ -78,15 +78,50 @@
 
 // Caracteres de comandos
 #define CMD_DUTY_MENOS_1			'A'
+#define CMD_DUTY_MENOS_1m			'a'
 #define AXI_GPIO_BIT_DUTY_MENOS_1	0x08
 #define CMD_DUTY_MAS_1				'S'
+#define CMD_DUTY_MAS_1m				's'
 #define AXI_GPIO_BIT_DUTY_MAS_1		0x04
 #define CMD_DUTY_MENOS_10			'Q'
+#define CMD_DUTY_MENOS_10m			'q'
 #define AXI_GPIO_BIT_DUTY_MENOS_10 	0x02
 #define CMD_DUTY_MAS_10				'W'
+#define CMD_DUTY_MAS_10m			'w'
 #define AXI_GPIO_BIT_DUTY_MAS_10	0x01
 #define CMD_DUTY_RESET				'R'
+#define CMD_DUTY_RESETm				'r'
 #define AXI_GPIO_BIT_DUTY_RESET		0x10
+
+
+// CMDs para terminal serial
+#define TERM_CLEAR  	"\x1B[2J\x1B[H"
+#define TERM_SEPARADOR  "#########################\r\n"
+
+// Variables globales
+Xuint32 duty = 0;
+Xuint8 frec = 0;
+
+void print_info_pwm(void) {
+
+	xil_printf(TERM_CLEAR);
+	xil_printf(TERM_SEPARADOR);
+
+	if(frec == 0) {
+		xil_printf("Frecuencia Base = 1 kHZ\r\n");
+	} else if(frec == 1) {
+		xil_printf("Frecuencia Base = 10 kHZ\r\n");
+	} else if(frec == 2) {
+		xil_printf("Frecuencia Base = 100 kHZ\r\n");
+	} else if(frec == 3) {
+		xil_printf("Frecuencia Base = 1 MHZ\r\n");
+	} else {
+		xil_printf("Frecuencia Base NO DEFINIDA\r\n");
+	}
+
+	xil_printf("Duty = %lu\r\n", duty);
+	xil_printf(TERM_SEPARADOR);
+}
 
 
 int main()
@@ -95,9 +130,9 @@ int main()
 	XGpio readFD;
 	Xuint32 frec_and_duty;
 	Xuint32 frec_and_duty_bck = 0;
-	Xuint32 aux;
+
 	// Mostrar frecuencia y Duty
-	Xuint8 frec, duty_10, duty_1;
+	Xuint8 aux, duty_10, duty_1;
 
 	// Control AXI para escritura de duty y reset
 	char c;
@@ -116,7 +151,8 @@ int main()
 
     init_platform();
 
-    print("\n\rInicio APP\n\r");
+    xil_printf(TERM_CLEAR);
+    xil_printf("Inicio APP\r\n");
 
     while(1){
 
@@ -131,38 +167,28 @@ int main()
     		duty_10 = (Xuint8)aux;
 
     		aux = ((frec_and_duty & IP_MASK_READ_FREC)>>IP_SHIFT_READ_FREC);
-    		frec = (Xuint8)aux;
-    		if(frec == 0) {
-    			xil_printf("Frecuencia Base = 1 kHZ\r\n");
-    		} else if(frec == 1) {
-    			xil_printf("Frecuencia Base = 10 kHZ\r\n");
-    		} else if(frec == 2) {
-    			xil_printf("Frecuencia Base = 100 kHZ\r\n");
-    		} else if(frec == 3) {
-    			xil_printf("Frecuencia Base = 1 MHZ\r\n");
-    		} else {
-    			xil_printf("Frecuencia Base NO DEFINIDA\r\n");
-    		}
 
-    		aux = duty_1 + (duty_10*10);
-    		xil_printf("Duty = %lu\r\n", aux);
+    		frec = (Xuint8)aux;
+    		duty = duty_1 + (duty_10*10);
+    		print_info_pwm();
+
     	}
 
     	// Check si recibi algo:
     	if (XUartPs_IsReceiveData(STDIN_BASEADDRESS)) {
+    		print_info_pwm();
     	    c = (char)XUartPs_ReadReg(STDIN_BASEADDRESS, XUARTPS_FIFO_OFFSET);
-    	    xil_printf("RX: %c\r\n", c);
+    	    //xil_printf("RX: %c\r\n", c);
 
-    	    if(c == CMD_DUTY_MENOS_10) {
+    	    if((c == CMD_DUTY_MENOS_10) || (c == CMD_DUTY_MENOS_10m)) {
     	    	XGpio_DiscreteWrite(&writeDR, 1, AXI_GPIO_BIT_DUTY_MENOS_10);
-    	    } else if(c == CMD_DUTY_MENOS_1) {
+    	    } else if((c == CMD_DUTY_MENOS_1) || (c == CMD_DUTY_MENOS_1m)) {
     	    	XGpio_DiscreteWrite(&writeDR, 1, AXI_GPIO_BIT_DUTY_MENOS_1);
-    	    } else if(c == CMD_DUTY_MAS_10) {
+    	    } else if((c == CMD_DUTY_MAS_10) || (c == CMD_DUTY_MAS_10m)) {
     	    	XGpio_DiscreteWrite(&writeDR, 1, AXI_GPIO_BIT_DUTY_MAS_10);
-    	    } else if(c == CMD_DUTY_MAS_1) {
+    	    } else if((c == CMD_DUTY_MAS_1) || (c == CMD_DUTY_MAS_1m)) {
 				XGpio_DiscreteWrite(&writeDR, 1, AXI_GPIO_BIT_DUTY_MAS_1);
-			}
-    	    else {
+    	    } else if((c == CMD_DUTY_RESET) || (c == CMD_DUTY_RESETm)) {
     	    	XGpio_DiscreteWrite(&writeDR, 1, AXI_GPIO_BIT_DUTY_RESET);
     	    }
 
